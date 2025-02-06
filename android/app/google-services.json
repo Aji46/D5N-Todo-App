@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "975794870059",
+    "project_id": "d5n-mechin-task",
+    "storage_bucket": "d5n-mechin-task.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975794870059:android:c6919fdefa0b5f6f2ed76e",
+        "android_client_info": {
+          "package_name": "com.example.d5n"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpb1St5Qw4oFMYi2_N6eECcAdTFmB4GyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
