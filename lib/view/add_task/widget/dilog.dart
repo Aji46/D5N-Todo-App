@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:d5n/controller/getX/CategoryDetailController.dart';
+import 'package:d5n/controller/getX/category_controller.dart';
 import 'package:d5n/view/home/widget/cous_textform.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -80,7 +81,9 @@ class AddTaskDialog extends StatelessWidget {
                         });
 
                         await _updateCategoryTaskCount();
-                        Navigator.pop(context);
+                        Navigator.push;
+                         final CategoryController controller = Get.put(CategoryController());
+                         controller.fetchCategories();
                       }
                     },
                   ),

@@ -1,11 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:d5n/model/user_model.dart';
+import 'package:d5n/view/Settings/hive.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SettingsController extends GetxController {
+  late Box<Note> noteBox;
+
+  
   final Rx<UserModel> user = UserModel(
     name: '',
     location: '',
@@ -14,7 +19,6 @@ class SettingsController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
-  
   final ImagePicker _picker = ImagePicker();
   final RxBool isLoading = false.obs;
 
@@ -22,6 +26,7 @@ class SettingsController extends GetxController {
   void onInit() {
     super.onInit();
     fetchUserData();
+    noteBox = Hive.box<Note>('notes');
   }
 
   Future<void> fetchUserData() async {

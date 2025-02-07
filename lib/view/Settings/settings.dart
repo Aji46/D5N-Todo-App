@@ -1,15 +1,25 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:d5n/constant/color.dart';
 import 'package:d5n/controller/getX/settings_Controller.dart';
+import 'package:d5n/view/Settings/controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+
 class SettingsPage extends StatelessWidget {
   final SettingsController controller = Get.put(SettingsController());
+
   
+  final PicController _controller = PicController.instance;
 
   static const String DEFAULT_NAME = "Malak Idrissi";
   static const String DEFAULT_LOCATION = "Rabat, Morocco";
+  File? galleryFile;
+  final picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +61,27 @@ class SettingsPage extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 30,
-                      backgroundImage: NetworkImage(
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpkGON1P9DJuAkdRoZ4wHpXn96FtBufu02fw&s',
-                      ),
+                    FutureBuilder<Uint8List?>(
+                      future: _controller.getSavedImage(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return const Icon(Icons.error); 
+                        } else if (snapshot.hasData && snapshot.data != null) {
+                          return CircleAvatar(
+                            radius: 30,
+                            backgroundImage: MemoryImage(snapshot.data!),
+                          );
+                        } else {
+                          return const CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(
+                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpkGON1P9DJuAkdRoZ4wHpXn96FtBufu02fw&s',
+                            ),
+                          );
+                        }
+                      },
                     ),
                     Padding(
                       padding: const EdgeInsets.all(16),
@@ -78,55 +104,44 @@ class SettingsPage extends StatelessWidget {
                   ],
                 ),
               ),
-               const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(
-                  "Hi! My name is Malak,I'm a community manager from Rabat,Morocco"),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            ListTile(
-              leading: const Icon(Icons.notifications),
-              title: const Text('Notifications'),
-              onTap: () {
-            
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('General'),
-              onTap: () {
-              
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Account'),
-              onTap: () {
-           
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.info),
-              title: const Text('About'),
-              onTap: () {
-            
-              },
-            ),
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                    "Hi! My name is Malak, I'm a community manager from Rabat, Morocco"),
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              ListTile(
+                leading: const Icon(Icons.notifications),
+                title: const Text('Notifications'),
+                onTap: () {},
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings),
+                title: const Text('General'),
+                onTap: () {},
+              ),
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('Account'),
+                onTap: () {},
+              ),
+              ListTile(
+                leading: const Icon(Icons.info),
+                title: const Text('About'),
+                onTap: () {},
+              ),
             ],
           );
         },
       ),
     );
   }
-       
 
   void _showEditDialog(BuildContext context) {
-    final nameController =
-        TextEditingController(text: controller.user.value.name);
-    final locationController =
-        TextEditingController(text: controller.user.value.location);
+    final nameController = TextEditingController(text: controller.user.value.name);
+    final locationController = TextEditingController(text: controller.user.value.location);
 
     Get.dialog(
       AlertDialog(
@@ -141,6 +156,12 @@ class SettingsPage extends StatelessWidget {
             TextField(
               controller: locationController,
               decoration: const InputDecoration(labelText: 'Location'),
+            ),
+            IconButton(
+              onPressed: () {
+                PicController.instance.getAndSaveImage();
+              },
+              icon: const Icon(Icons.image),
             ),
           ],
         ),

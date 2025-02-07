@@ -12,10 +12,7 @@ class AuthController extends GetxController {
 
   var isLoading = false.obs;
 
-  @override
-
-
-Future<void> login(String email, String password) async {
+  Future<void> login(String email, String password) async {
   try {
     isLoading.value = true;
     UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -23,7 +20,7 @@ Future<void> login(String email, String password) async {
       password: password,
     );
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', true); // Update login status
+    await prefs.setBool('isLoggedIn', true);
 
     Get.snackbar("Success", "Logged in successfully!");
     Get.offAll(() => HomePage());
